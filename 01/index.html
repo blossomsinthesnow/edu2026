@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 윤리와 사회적 가치 학습</title>
+    <!-- Font Awesome (아이콘용) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 기본 스타일 설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+        
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #9333ea;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding-bottom: 50px; }
+
+        /* 레이아웃 */
+        .container { max-width: 850px; margin: 0 auto; padding: 0 20px; }
+
+        /* 헤더 */
+        header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); sticky: top; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #e2e8f0; }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+        .logo { font-size: 1.25rem; font-weight: bold; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        nav { display: flex; align-items: center; gap: 15px; }
+        .nav-btn { background: none; border: none; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: color 0.2s; text-decoration: none; font-size: 0.95rem; }
+        .nav-btn:hover { color: var(--primary-color); }
+        .nav-btn-primary { background: var(--primary-color); color: white; padding: 8px 18px; rounded: 50px; border-radius: 25px; }
+        .nav-btn-primary:hover { background: var(--primary-hover); color: white; }
+        .divider { width: 1px; height: 16px; background: #e2e8f0; margin: 0 5px; }
+
+        /* 탭 컨텐츠 */
+        .tab-content { display: none; margin-top: 30px; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 섹션 및 카드 */
+        section { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        h2 { font-size: 1.75rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .label-indigo { color: var(--primary-color); font-size: 1.2rem; font-weight: 300; }
+        .label-red { color: var(--danger-color); font-size: 1.2rem; font-weight: 300; }
+        .label-green { color: var(--success-color); font-size: 1.2rem; font-weight: 300; }
+        
+        p.desc { color: var(--text-muted); margin-bottom: 20px; }
+
+        /* 그리드 시스템 */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .info-card { padding: 15px; border-radius: 12px; border: 1px solid transparent; }
+        .bg-indigo-light { background: #eef2ff; border-color: #e0e7ff; }
+        .bg-purple-light { background: #faf5ff; border-color: #f3e8ff; }
+        .info-card h3 { font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .info-card p { font-size: 0.9rem; color: #475569; }
+
+        /* 인포그래픽 버튼 */
+        .action-area { text-align: center; padding: 20px 0; }
+        .btn-infographic { 
+            background: white; border: 2px solid var(--primary-color); color: var(--primary-color);
+            padding: 12px 25px; border-radius: 16px; font-weight: bold; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 10px; transition: all 0.2s;
+        }
+        .btn-infographic:hover { background: #f5f3ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1); }
+
+        /* 통계 수치 */
+        .stat-box { padding: 20px; border: 1px solid #e2e8f0; border-radius: 15px; text-align: center; }
+        .stat-val { font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+
+        /* 리스트 아이템 */
+        .list-item { display: flex; align-items: center; padding: 12px; background: #f1f5f9; border-radius: 10px; margin-bottom: 10px; }
+        .rank { width: 30px; height: 30px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; font-size: 0.8rem; }
+
+        /* 퀴즈 스타일 */
+        .quiz-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .quiz-q-num { color: var(--primary-color); font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; display: block; }
+        .quiz-q-text { font-size: 1.25rem; font-weight: bold; margin-bottom: 25px; }
+        .quiz-option { 
+            width: 100%; text-align: left; padding: 15px 20px; border-radius: 12px; border: 2px solid #f1f5f9;
+            background: white; cursor: pointer; margin-bottom: 12px; font-weight: 500; transition: all 0.2s;
+        }
+        .quiz-option:hover { border-color: var(--primary-color); background: #f5f3ff; }
+        .quiz-option:disabled { cursor: default; }
+
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 12px; display: none; }
+        .feedback.correct { display: block; background: #ecfdf5; border: 1px solid #10b981; color: #065f46; }
+        .feedback.wrong { display: block; background: #fef2f2; border: 1px solid #ef4444; color: #991b1b; }
+
+        /* 모달 스타일 */
+        .modal { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+            z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);
+        }
+        .modal.active { display: flex; }
+        .modal-content { position: relative; max-width: 900px; width: 100%; }
+        .modal-img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; border-radius: 12px; }
+        .close-modal { 
+            position: absolute; top: -50px; right: 0; color: white; font-size: 2rem; 
+            background: none; border: none; cursor: pointer; 
+        }
+
+        /* 공통 유틸리티 */
+        .text-center { text-align: center; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-inner">
+            <h1 class="logo">AI Ethics Class</h1>
+            <nav>
+                <a href="../index.html" class="nav-btn">
+                    <i class="fas fa-home"></i> <span class="sm-hide">홈</span>
+                </a>
+                <div class="divider"></div>
+                <button onclick="showTab('study')" class="nav-btn">학습하기</button>
+                <button onclick="showTab('quiz')" class="nav-btn nav-btn-primary">퀴즈 풀기</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- 학습 섹션 -->
+        <div id="study" class="tab-content active">
+            <section>
+                <h2>인공지능의 편향성 <span class="label-indigo">AI Bias</span></h2>
+                <p class="desc">AI는 중립적인 것처럼 보이지만, 사람이 만든 데이터와 알고리즘에 의해 편향될 수 있습니다.</p>
+                
+                <div class="grid-2">
+                    <div class="info-card bg-indigo-light">
+                        <h3><i class="fas fa-database"></i> 학습 데이터 편향</h3>
+                        <p>불균형한 데이터나 특정 속성에 큰 가중치를 두어 잘못된 판단을 내리는 경우</p>
+                    </div>
+                    <div class="info-card bg-purple-light">
+                        <h3><i class="fas fa-code"></i> 알고리즘 편향</h3>
+                        <p>인종, 성별 등 사회적 불균형이 모델 설계 과정에서 그대로 반영되는 경우</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 인포그래픽 버튼 -->
+            <div class="action-area">
+                <button onclick="openModal()" class="btn-infographic">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>윤리적 딜레마 인포그래픽 확인하기</span>
+                </button>
+            </div>
+
+            <section>
+                <h2>윤리적 딜레마 <span class="label-red">Trolley Dilemma</span></h2>
+                <div style="background: #fef2f2; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                    <p style="font-style: italic; color: #475569;">"5명을 구하기 위해 1명을 희생하는 것이 옳은가?"</p>
+                </div>
+                <div class="grid-2">
+                    <div class="stat-box">
+                        <div class="stat-val" style="color: var(--primary-color);">89%</div>
+                        <div class="stat-label">선로 전환 찬성</div>
+                        <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 5px;">간접적 선택 선호</p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val" style="color: var(--danger-color);">11%</div>
+                        <div class="stat-label">직접 희생 찬성</div>
+                        <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 5px;">행동 방식의 중요성</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>모럴 머신 연구 <span class="label-green">Moral Machine</span></h2>
+                <p class="desc">MIT가 230만 명을 대상으로 조사한 '자율주행차의 선택' 결과입니다.</p>
+                
+                <div class="list-item">
+                    <span class="rank" style="background: #10b981;">1</span>
+                    <span style="font-weight: 500;">유모차를 끄는 사람</span>
+                </div>
+                <div class="list-item">
+                    <span class="rank" style="background: #34d399;">2</span>
+                    <span style="font-weight: 500;">소녀</span>
+                </div>
+                <div class="list-item">
+                    <span class="rank" style="background: #6ee7b7;">3</span>
+                    <span style="font-weight: 500;">소년</span>
+                </div>
+                
+                <div style="margin-top: 25px; padding: 15px; border-left: 4px solid var(--warning-color); background: #fffbeb; border-radius: 0 10px 10px 0;">
+                    <h4 style="color: #92400e; font-weight: bold; margin-bottom: 5px;">지역별 가치 판단 차이</h4>
+                    <p style="font-size: 0.85rem; color: #b45309;">서구권은 <b>'어린이'</b>를, 동방 국가(아시아 등)는 <b>'노인'</b>을 우선 보호하려는 경향이 상대적으로 높았습니다.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- 퀴즈 섹션 -->
+        <div id="quiz" class="tab-content">
+            <div class="quiz-card">
+                <div id="quiz-container">
+                    <span id="q-num" class="quiz-q-num">질문 1 / 4</span>
+                    <h3 id="q-text" class="quiz-q-text">학습 로딩 중...</h3>
+                    
+                    <div id="quiz-options">
+                        <!-- 옵션들이 동적으로 생성됨 -->
+                    </div>
+                    
+                    <div id="quiz-feedback" class="feedback">
+                        <!-- 결과 피드백 -->
+                    </div>
+                </div>
+                
+                <div id="score-container" class="hidden text-center">
+                    <div style="font-size: 4rem; margin-bottom: 10px;">🎉</div>
+                    <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">학습을 모두 마쳤습니다!</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 30px;">당신의 점수는 <span id="final-score" style="color: var(--primary-color); font-weight: bold; font-size: 1.5rem;">0</span>점 입니다.</p>
+                    <button onclick="resetQuiz()" class="nav-btn nav-btn-primary" style="padding: 15px 40px; font-size: 1rem;">다시 도전하기</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 인포그래픽 모달 -->
+    <div id="infographic-modal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <img src="04.png" alt="인포그래픽" class="modal-img" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found+(04.png)'">
+            <p style="color: white; text-align: center; margin-top: 15px; font-size: 0.9rem;">인포그래픽 이미지를 확인하세요.</p>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 1. 전역 상태 및 데이터
+         */
+        const quizData = [
+            {
+                q: "인공지능의 편향성이 발생하는 주요 원인 중, 불균형한 데이터로 인해 생기는 것은?",
+                options: ["학습 데이터 편향", "시스템 하드웨어 오류", "사용자 조작 실수"],
+                answer: 0,
+                hint: "데이터를 학습하는 과정에서 발생합니다."
+            },
+            {
+                q: "트롤리 문제에서 '직접 1명을 밀어 희생시키는 방식'의 찬성률은?",
+                options: ["89%", "50%", "11%"],
+                answer: 2,
+                hint: "직접적인 행동에 대해 사람들은 훨씬 부정적입니다."
+            },
+            {
+                q: "모럴 머신 연구에서 아시아 국가들이 상대적으로 더 높게 보인 우선순위는?",
+                options: ["어린아이", "노인", "반려동물"],
+                answer: 1,
+                hint: "동방 국가의 문화적 특수성이 반영되었습니다."
+            },
+            {
+                q: "AI 윤리 확립을 위해 특정 기업의 기술력보다 더 강조되는 것은?",
+                options: ["최신 알고리즘", "사회적 합의", "데이터의 양"],
+                answer: 1,
+                hint: "사회 구성원 전체의 동의가 필요합니다."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        /**
+         * 2. 탭 및 모달 제어 함수
+         */
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal() {
+            const modal = document.getElementById('infographic-modal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('infographic-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        /**
+         * 3. 퀴즈 엔진 함수
+         */
+        function loadQuiz() {
+            const qNumEl = document.getElementById('q-num');
+            const qTextEl = document.getElementById('q-text');
+            const optionsEl = document.getElementById('quiz-options');
+            const feedbackEl = document.getElementById('quiz-feedback');
+
+            // 초기화
+            feedbackEl.className = 'feedback';
+            feedbackEl.innerHTML = '';
+            
+            const currentData = quizData[currentQ];
+            qNumEl.innerText = `질문 ${currentQ + 1} / ${quizData.length}`;
+            qTextEl.innerText = currentData.q;
+            
+            optionsEl.innerHTML = '';
+            currentData.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx) {
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const currentData = quizData[currentQ];
+            const isCorrect = (idx === currentData.answer);
+            
+            // 모든 버튼 비활성화
+            const buttons = document.querySelectorAll('.quiz-option');
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                score += 25;
+                feedbackEl.className = 'feedback correct';
+                feedbackEl.innerHTML = `<i class="fas fa-check-circle"></i> 정답입니다!`;
+            } else {
+                feedbackEl.className = 'feedback wrong';
+                feedbackEl.innerHTML = `<i class="fas fa-times-circle"></i> 오답입니다. <br><small style="opacity:0.8">힌트: ${currentData.hint}</small>`;
+            }
+
+            // 1.5초 후 다음 문제 혹은 결과창
+            setTimeout(() => {
+                currentQ++;
+                if (currentQ < quizData.length) {
+                    loadQuiz();
+                } else {
+                    showFinalScore();
+                }
+            }, 1500);
+        }
+
+        function showFinalScore() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('score-container').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+        }
+
+        function resetQuiz() {
+            currentQ = 0;
+            score = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('score-container').classList.add('hidden');
+            loadQuiz();
+        }
+
+        // 초기 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            loadQuiz();
+        });
+    </script>
+</body>
+</html>
